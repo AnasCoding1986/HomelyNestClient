@@ -12,6 +12,7 @@ const Home = () => {
       <Categories />
       {/* Rooms section */}
       <Rooms />
+      <p>Home 1</p>
     </div>
   )
 }
