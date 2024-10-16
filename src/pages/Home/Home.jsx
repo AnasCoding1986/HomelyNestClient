@@ -13,6 +13,7 @@ const Home = () => {
       {/* Rooms section */}
       <Rooms />
       <p>Home 1</p>
+      <p>Home 2</p>
     </div>
   )
 }
