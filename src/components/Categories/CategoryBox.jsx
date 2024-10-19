@@ -1,13 +1,16 @@
 import PropTypes from 'prop-types'
 import queryString from 'query-string';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 const CategoryBox = ({ label, icon: Icon }) => {
 
   const navigate = useNavigate();
+  const [params] = useSearchParams();
+  const category = params.get("category");
+  console.log(category);
 
   const handleClick = () => {
-    const currentQuery = { category: label }; 
+    const currentQuery = { category: label };
 
     const URL = queryString.stringifyUrl({
       url: "/",
@@ -19,8 +22,9 @@ const CategoryBox = ({ label, icon: Icon }) => {
 
   return (
     <div
-    onClick={handleClick}
+      onClick={handleClick}
       className={`flex 
+        ${category === label ? 'border-b-black text-black' : 'border-transparent text-neutral-500'}
   flex-col 
   items-center 
   justify-center 
