@@ -3,6 +3,7 @@ import { FcGoogle } from 'react-icons/fc'
 import useAuth from '../../hooks/useAuth';
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import { TbFidgetSpinner } from 'react-icons/tb';
 
 const SignUp = () => {
 
@@ -23,6 +24,7 @@ const SignUp = () => {
     console.log(image);
 
     try {
+      setLoading(true)
       // 1. upload image and get image URL
       const { data } = await axios.post(
         `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_IMAGEBB_API_KEY}`, formData
@@ -44,6 +46,17 @@ const SignUp = () => {
       toast.error(error.message)
     }
 
+  }
+
+  const handleGoogleSignIn = async () => {
+    try {
+      await signInWithGoogle();
+      navigate("/");
+      toast.success("Google signIn successfull")
+    } catch (error) {
+      console.log(error);
+      toast.error("Sign in not successfull")   
+    }
   }
 
   return (
@@ -123,7 +136,7 @@ const SignUp = () => {
               type='submit'
               className='bg-rose-500 w-full rounded-md py-3 text-white'
             >
-              {loading? "Daran vai" : "Continue"}
+              {loading? <TbFidgetSpinner className='animate-spin m-auto'/> : "Continue"}
             </button>
           </div>
         </form>
@@ -134,11 +147,14 @@ const SignUp = () => {
           </p>
           <div className='flex-1 h-px sm:w-16 dark:bg-gray-700'></div>
         </div>
-        <div className='flex justify-center items-center space-x-2 border m-3 p-2 border-gray-300 border-rounded cursor-pointer'>
+        <button 
+        disabled={loading}
+        onClick={handleGoogleSignIn}
+         className='disabled:cursor-not-allowed flex justify-center items-center space-x-2 border m-3 p-2 border-gray-300 border-rounded cursor-pointer'>
           <FcGoogle size={32} />
 
           <p>Continue with Google</p>
-        </div>
+        </button>
         <p className='px-6 text-sm text-center text-gray-400'>
           Already have an account?{' '}
           <Link
