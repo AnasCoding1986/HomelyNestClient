@@ -1,10 +1,49 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { FcGoogle } from 'react-icons/fc'
+import useAuth from '../../hooks/useAuth';
+import axios from 'axios';
+import toast from 'react-hot-toast';
 
 const SignUp = () => {
 
-  const handleSubmit = (e) => {
+  const navigate = useNavigate();
+
+  const { createUser, signInWithGoogle, updateUserProfile, loading, setLoading} = useAuth();
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    const form = e.target;
+    const name = form.name.value;
+    const email = form.email.value;
+    const password = form.password.value;
+    const image = form.image.files[0];
+    const formData = new FormData();
+    formData.append('image', image)
+    console.log(name, email, password);
+    console.log(image);
+
+    try {
+      // 1. upload image and get image URL
+      const { data } = await axios.post(
+        `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_IMAGEBB_API_KEY}`, formData
+      )
+      console.log(data.data.display_url);
+
+      // 2. user registration
+      const result = await createUser(email, password);
+      console.log(result);
+
+      // 3. save name and photoUrl to firebase
+      await updateUserProfile(name, data.data.display_url);
+
+      navigate("/");
+      toast.success("Sign up successfull");
+
+    } catch (error) {
+      console.log(error);
+      toast.error(error.message)
+    }
+
   }
 
   return (
@@ -15,7 +54,7 @@ const SignUp = () => {
           <p className='text-sm text-gray-400'>Welcome to StayVista</p>
         </div>
         <form
-        onSubmit={handleSubmit}
+          onSubmit={handleSubmit}
           noValidate=''
           action=''
           className='space-y-6 ng-untouched ng-pristine ng-valid'
@@ -80,10 +119,11 @@ const SignUp = () => {
 
           <div>
             <button
+            disabled={loading}
               type='submit'
               className='bg-rose-500 w-full rounded-md py-3 text-white'
             >
-              Continue
+              {loading? "Daran vai" : "Continue"}
             </button>
           </div>
         </form>
