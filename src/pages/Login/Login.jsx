@@ -1,4 +1,4 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { FcGoogle } from 'react-icons/fc';
 import useAuth from '../../hooks/useAuth';
 import toast from 'react-hot-toast';
@@ -7,6 +7,8 @@ import { TbFidgetSpinner } from 'react-icons/tb';
 const Login = () => {
   
   const navigate = useNavigate();
+  const location = useLocation();
+  const from = location?.state || "/";
 
   const { signIn, signInWithGoogle, loading, setLoading} = useAuth();
 
@@ -23,12 +25,13 @@ const Login = () => {
       const result = await signIn(email, password);
       console.log(result);
     
-      navigate("/");
+      navigate(from);
       toast.success("Sign in successfull");
 
     } catch (error) {
       console.log(error);
-      toast.error(error.message)
+      toast.error(error.message);
+      setLoading(false);
     }
 
   }
@@ -36,7 +39,7 @@ const Login = () => {
   const handleGoogleSignIn = async () => {
     try {
       await signInWithGoogle();
-      navigate("/");
+      navigate(from);
       toast.success("Google signIn successfull")
     } catch (error) {
       console.log(error);
