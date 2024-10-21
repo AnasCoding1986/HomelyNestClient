@@ -5,6 +5,7 @@ import ErrorPage from '../pages/ErrorPage'
 import Login from '../pages/Login/Login'
 import SignUp from '../pages/SignUp/SignUp'
 import RoomDetails from '../pages/RoomDetails/RoomDetails'
+import PrivateRoute from './PrivateRoute'
 import DashBoard from '../layouts/DashBoard'
 import Statistic from '../pages/Dashboard/Common/Statistic'
 import Addroom from '../pages/Dashboard/Host/Addroom'
@@ -22,7 +23,7 @@ export const router = createBrowserRouter([
       },
       {
         path: '/room/:id',
-        element: <RoomDetails />,
+        element: <PrivateRoute><RoomDetails /></PrivateRoute>,
       },
     ],
   },
