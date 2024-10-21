@@ -3,14 +3,16 @@ import { FcGoogle } from 'react-icons/fc';
 import useAuth from '../../hooks/useAuth';
 import toast from 'react-hot-toast';
 import { TbFidgetSpinner } from 'react-icons/tb';
+import { useState } from 'react';
 
 const Login = () => {
   
   const navigate = useNavigate();
+  const [email,setEmail] = useState();
   const location = useLocation();
   const from = location?.state || "/";
 
-  const { signIn, signInWithGoogle, loading, setLoading} = useAuth();
+  const { signIn, signInWithGoogle, loading, setLoading, resetPassword} = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -47,6 +49,17 @@ const Login = () => {
     }
   }
 
+  const handleResetPassword = async () => {
+    if (!email) return (toast.error("Please enter your emial"))
+    try {
+      console.log(email);
+      await resetPassword(email);
+      setLoading(false)
+    } catch (error) {
+      toast.error("There is an errr")
+    }
+  }
+
   return (
     <div className='flex justify-center items-center min-h-screen'>
       <div className='flex flex-col max-w-md p-6 rounded-md sm:p-10 bg-gray-100 text-gray-900'>
@@ -69,6 +82,7 @@ const Login = () => {
               </label>
               <input
                 type='email'
+                onBlur={(e)=>setEmail(e.target.value)}
                 name='email'
                 id='email'
                 required
@@ -106,7 +120,7 @@ const Login = () => {
           </div>
         </form>
         <div className='space-y-1'>
-          <button className='text-xs hover:underline hover:text-rose-500 text-gray-400'>
+          <button onClick={handleResetPassword} className='text-xs hover:underline hover:text-rose-500 text-gray-400'>
             Forgot password?
           </button>
         </div>
