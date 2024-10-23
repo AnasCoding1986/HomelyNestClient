@@ -21,6 +21,12 @@ const Addroom = () => {
         setDates(range.selection)
     }
 
+    console.log(imagetext);
+    console.log(imagetext.split("."));
+    console.log(imagetext.split(".")[0].slice(0,10));
+    console.log(imagetext.split(".")[0].slice(0,10)+"..."+imagetext.split(".")[1]);
+    
+
     const handleSubmit = async e => {
         e.preventDefault();
         const form = e.target;
@@ -65,6 +71,11 @@ const Addroom = () => {
 
     }
 
+    const handleImage = image => {
+        setImagePreview(URL.createObjectURL(image));
+        setImageText(image.name)
+    }
+
     return (
         <div>
             <p>This is add room</p>
@@ -76,6 +87,8 @@ const Addroom = () => {
                 handleSubmit={handleSubmit}
                 setImagePreview={setImagePreview}
                 imagePreview={imagePreview}
+                handleImage={handleImage}
+                imagetext={imagetext}
             ></AddRoomForm>
         </div>
     );

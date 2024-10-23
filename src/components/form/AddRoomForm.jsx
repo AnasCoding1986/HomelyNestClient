@@ -1,7 +1,7 @@
-
-import { categories } from '../Categories/CategoriesData'
+import { categories } from '../Categories/CategoriesData';
 import { DateRange } from 'react-date-range';
-const AddRoomForm = ({ dates, handleDates, handleSubmit, setImagePreview, imagePreview }) => {
+
+const AddRoomForm = ({ dates, handleDates, handleSubmit, setImagePreview, imagePreview, handleImage, imagetext }) => {
     return (
         <div className='w-full min-h-[calc(100vh-40px)] flex flex-col justify-center items-center text-gray-800 rounded-xl bg-gray-50'>
             <form onSubmit={handleSubmit}>
@@ -12,7 +12,7 @@ const AddRoomForm = ({ dates, handleDates, handleSubmit, setImagePreview, imageP
                                 Location
                             </label>
                             <input
-                                className='w-full px-4 py-3 text-gray-800 border border-rose-300 focus:outline-rose-500 rounded-md '
+                                className='w-full px-4 py-3 text-gray-800 border border-rose-300 focus:outline-rose-500 rounded-md'
                                 name='location'
                                 id='location'
                                 type='text'
@@ -42,11 +42,10 @@ const AddRoomForm = ({ dates, handleDates, handleSubmit, setImagePreview, imageP
                             <label htmlFor='location' className='block text-gray-600'>
                                 Select Availability Range
                             </label>
-                            {/* Calender */}
                             <DateRange
-                                rangeColors={["#F43F5E"]}
+                                rangeColors={['#F43F5E']}
                                 editableDateInputs={true}
-                                onChange={(e) => handleDates(e)}
+                                onChange={handleDates}
                                 moveRangeOnFirstSelection={false}
                                 ranges={[dates]}
                             />
@@ -58,7 +57,7 @@ const AddRoomForm = ({ dates, handleDates, handleSubmit, setImagePreview, imageP
                                 Title
                             </label>
                             <input
-                                className='w-full px-4 py-3 text-gray-800 border border-rose-300 focus:outline-rose-500 rounded-md '
+                                className='w-full px-4 py-3 text-gray-800 border border-rose-300 focus:outline-rose-500 rounded-md'
                                 name='title'
                                 id='title'
                                 type='text'
@@ -67,7 +66,7 @@ const AddRoomForm = ({ dates, handleDates, handleSubmit, setImagePreview, imageP
                             />
                         </div>
 
-                        <div className=' p-4 bg-white w-full  m-auto rounded-lg'>
+                        <div className='p-4 bg-white w-full m-auto rounded-lg'>
                             <div className='file_upload px-5 py-3 relative border-4 border-dotted border-gray-300 rounded-lg'>
                                 <div className='flex flex-col w-max mx-auto text-center'>
                                     <label>
@@ -75,30 +74,39 @@ const AddRoomForm = ({ dates, handleDates, handleSubmit, setImagePreview, imageP
                                             className='text-sm cursor-pointer w-36 hidden'
                                             type='file'
                                             name='image'
-                                            onChange={e => setImagePreview(URL.createObjectURL(e.target.files[0]))}
+                                            onChange={e => handleImage(e.target.files[0])}
                                             id='image'
                                             accept='image/*'
                                             hidden
                                         />
                                         <div className='flex gap-5 items-center justify-between'>
                                             <div className='bg-rose-500 items-center text-white border border-gray-300 rounded font-semibold cursor-pointer p-1 px-3 hover:bg-rose-500'>
-                                                <p>Upload Image</p>
+                                                {imagetext ?
+                                                    imagetext.length > 10 ?
+                                                        `${imagetext.split(".")[0].slice(0, 10)}...${imagetext.split(".").pop()}` :
+                                                        imagetext
+                                                    : 'Upload Image'}
+
                                             </div>
-                                            
-                                                {imagePreview && <div><img src={imagePreview} width='50px' /></div>}
-                                            
+
+                                            {imagePreview && (
+                                                <div>
+                                                    <img src={imagePreview} alt='Preview' width='50px' />
+                                                </div>
+                                            )}
                                         </div>
                                     </label>
                                 </div>
                             </div>
                         </div>
+
                         <div className='flex justify-between gap-2'>
                             <div className='space-y-1 text-sm'>
                                 <label htmlFor='price' className='block text-gray-600'>
                                     Price
                                 </label>
                                 <input
-                                    className='w-full px-4 py-3 text-gray-800 border border-rose-300 focus:outline-rose-500 rounded-md '
+                                    className='w-full px-4 py-3 text-gray-800 border border-rose-300 focus:outline-rose-500 rounded-md'
                                     name='price'
                                     id='price'
                                     type='number'
@@ -112,7 +120,7 @@ const AddRoomForm = ({ dates, handleDates, handleSubmit, setImagePreview, imageP
                                     Total guest
                                 </label>
                                 <input
-                                    className='w-full px-4 py-3 text-gray-800 border border-rose-300 focus:outline-rose-500 rounded-md '
+                                    className='w-full px-4 py-3 text-gray-800 border border-rose-300 focus:outline-rose-500 rounded-md'
                                     name='total_guest'
                                     id='guest'
                                     type='number'
@@ -128,7 +136,7 @@ const AddRoomForm = ({ dates, handleDates, handleSubmit, setImagePreview, imageP
                                     Bedrooms
                                 </label>
                                 <input
-                                    className='w-full px-4 py-3 text-gray-800 border border-rose-300 focus:outline-rose-500 rounded-md '
+                                    className='w-full px-4 py-3 text-gray-800 border border-rose-300 focus:outline-rose-500 rounded-md'
                                     name='bedrooms'
                                     id='bedrooms'
                                     type='number'
@@ -142,7 +150,7 @@ const AddRoomForm = ({ dates, handleDates, handleSubmit, setImagePreview, imageP
                                     Bathrooms
                                 </label>
                                 <input
-                                    className='w-full px-4 py-3 text-gray-800 border border-rose-300 focus:outline-rose-500 rounded-md '
+                                    className='w-full px-4 py-3 text-gray-800 border border-rose-300 focus:outline-rose-500 rounded-md'
                                     name='bathrooms'
                                     id='bathrooms'
                                     type='number'
@@ -159,7 +167,7 @@ const AddRoomForm = ({ dates, handleDates, handleSubmit, setImagePreview, imageP
 
                             <textarea
                                 id='description'
-                                className='block rounded-md focus:rose-300 w-full h-32 px-4 py-3 text-gray-800  border border-rose-300 focus:outline-rose-500 '
+                                className='block rounded-md focus:rose-300 w-full h-32 px-4 py-3 text-gray-800 border border-rose-300 focus:outline-rose-500'
                                 name='description'
                             ></textarea>
                         </div>
@@ -174,7 +182,7 @@ const AddRoomForm = ({ dates, handleDates, handleSubmit, setImagePreview, imageP
                 </button>
             </form>
         </div>
-    )
-}
+    );
+};
 
-export default AddRoomForm
+export default AddRoomForm;
