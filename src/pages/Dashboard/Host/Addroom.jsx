@@ -5,6 +5,8 @@ import { imageUpload } from "../../../api/Utility";
 
 
 const Addroom = () => {
+    const [imagePreview,setImagePreview] = useState();
+    const [imagetext,setImageText] = useState("Upload Image");
     const { user } = useAuth();
     const [dates, setDates] = useState(
         {
@@ -72,6 +74,8 @@ const Addroom = () => {
                 dates={dates}
                 handleDates={handleDates}
                 handleSubmit={handleSubmit}
+                setImagePreview={setImagePreview}
+                imagePreview={imagePreview}
             ></AddRoomForm>
         </div>
     );

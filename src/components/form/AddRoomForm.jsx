@@ -1,7 +1,7 @@
 
 import { categories } from '../Categories/CategoriesData'
 import { DateRange } from 'react-date-range';
-const AddRoomForm = ({ dates, handleDates, handleSubmit }) => {
+const AddRoomForm = ({ dates, handleDates, handleSubmit, setImagePreview, imagePreview }) => {
     return (
         <div className='w-full min-h-[calc(100vh-40px)] flex flex-col justify-center items-center text-gray-800 rounded-xl bg-gray-50'>
             <form onSubmit={handleSubmit}>
@@ -46,7 +46,7 @@ const AddRoomForm = ({ dates, handleDates, handleSubmit }) => {
                             <DateRange
                                 rangeColors={["#F43F5E"]}
                                 editableDateInputs={true}
-                                onChange={(e)=>handleDates(e)}
+                                onChange={(e) => handleDates(e)}
                                 moveRangeOnFirstSelection={false}
                                 ranges={[dates]}
                             />
@@ -75,12 +75,18 @@ const AddRoomForm = ({ dates, handleDates, handleSubmit }) => {
                                             className='text-sm cursor-pointer w-36 hidden'
                                             type='file'
                                             name='image'
+                                            onChange={e => setImagePreview(URL.createObjectURL(e.target.files[0]))}
                                             id='image'
                                             accept='image/*'
                                             hidden
                                         />
-                                        <div className='bg-rose-500 text-white border border-gray-300 rounded font-semibold cursor-pointer p-1 px-3 hover:bg-rose-500'>
-                                            Upload Image
+                                        <div className='flex gap-5 items-center justify-between'>
+                                            <div className='bg-rose-500 items-center text-white border border-gray-300 rounded font-semibold cursor-pointer p-1 px-3 hover:bg-rose-500'>
+                                                <p>Upload Image</p>
+                                            </div>
+                                            
+                                                {imagePreview && <div><img src={imagePreview} width='50px' /></div>}
+                                            
                                         </div>
                                     </label>
                                 </div>
