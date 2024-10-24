@@ -2,32 +2,41 @@ import { useState } from "react";
 import AddRoomForm from "../../../components/form/AddRoomForm";
 import useAuth from "../../../hooks/useAuth";
 import { imageUpload } from "../../../api/Utility";
-
+import { useMutation } from "@tanstack/react-query";
+import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom"; // Ensure you import useNavigate
 
 const Addroom = () => {
-    const [imagePreview,setImagePreview] = useState();
-    const [imagetext,setImageText] = useState("Upload Image");
+    const axiosSecure = useAxiosSecure();
+    const navigate = useNavigate();
+    const [imagePreview, setImagePreview] = useState();
+    const [imagetext, setImageText] = useState("Upload Image");
     const { user } = useAuth();
-    const [dates, setDates] = useState(
-        {
-            startDate: new Date(),
-            endDate: null,
-            key: 'selection'
-        }
-    );
+    const [dates, setDates] = useState({
+        startDate: new Date(),
+        endDate: null,
+        key: 'selection',
+    });
 
-    const handleDates = range => {
-        console.log(range);
-        setDates(range.selection)
-    }
+    const handleDates = (range) => {
+        setDates(range.selection);
+    };
 
-    console.log(imagetext);
-    console.log(imagetext.split("."));
-    console.log(imagetext.split(".")[0].slice(0,10));
-    console.log(imagetext.split(".")[0].slice(0,10)+"..."+imagetext.split(".")[1]);
-    
+    const { mutateAsync, isLoading } = useMutation({
+        mutationFn: async (roomData) => {
+            await axiosSecure.post("/rooms", roomData);
+        },
+        onSuccess: () => {
+            toast.success("Saved successfully");
+            navigate("/dashboard/my-listings"); // Navigate after success
+        },
+        onError: (error) => {
+            toast.error(`Error: ${error.message}`);
+        },
+    });
 
-    const handleSubmit = async e => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         const form = e.target;
         const location = form.location.value;
@@ -44,12 +53,11 @@ const Addroom = () => {
         const host = {
             name: user?.displayName,
             image: user?.photoURL,
-            email: user?.email
-        }
+            email: user?.email,
+        };
 
         try {
             const image_URL = await imageUpload(image);
-            console.log(image_URL);
             const roomData = {
                 location,
                 category,
@@ -61,20 +69,21 @@ const Addroom = () => {
                 bedrooms,
                 bathrooms,
                 description,
-                image:image_URL,
-            }
-            console.log(roomData);
-            
+                image: image_URL,
+                host,
+            };
+
+            await mutateAsync(roomData); // Execute mutation here
         } catch (error) {
             console.log(error);
+            toast.error("Failed to save the room");
         }
+    };
 
-    }
-
-    const handleImage = image => {
+    const handleImage = (image) => {
         setImagePreview(URL.createObjectURL(image));
-        setImageText(image.name)
-    }
+        setImageText(image.name);
+    };
 
     return (
         <div>
@@ -89,7 +98,8 @@ const Addroom = () => {
                 imagePreview={imagePreview}
                 handleImage={handleImage}
                 imagetext={imagetext}
-            ></AddRoomForm>
+                isLoading={isLoading} // Pass loading state
+            />
         </div>
     );
 };
