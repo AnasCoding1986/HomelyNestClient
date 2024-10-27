@@ -3,7 +3,7 @@ import { format } from 'date-fns'
 import DeleteMOdal from '../../../components/Modal/DeleteModal'
 import { useState } from 'react'
 
-const RoomDataRow = ({ room, refetch }) => {
+const RoomDataRow = ({ room, refetch, handleDelete }) => {
 
     const [isOpen, setIsOpen] = useState(false);
     const closeModal = () => {
@@ -45,7 +45,7 @@ const RoomDataRow = ({ room, refetch }) => {
                 </p>
             </td>
             <td className='px-5 py-5 border-b border-gray-200 bg-white text-sm'>
-                <button onClick={() => {setIsOpen(true)}} className='relative cursor-pointer inline-block px-3 py-1 font-semibold text-green-900 leading-tight'>
+                <button onClick={() => { setIsOpen(true) }} className='relative cursor-pointer inline-block px-3 py-1 font-semibold text-green-900 leading-tight'>
                     <span
                         aria-hidden='true'
                         className='absolute inset-0 bg-red-200 opacity-50 rounded-full'
@@ -53,7 +53,7 @@ const RoomDataRow = ({ room, refetch }) => {
                     <span className='relative'>Delete</span>
                 </button>
                 {/* Delete modal */}
-                <DeleteMOdal closeModal={closeModal} isOpen={isOpen}></DeleteMOdal>
+                <DeleteMOdal closeModal={closeModal} isOpen={isOpen} handleDelete={handleDelete} id={room?._id}></DeleteMOdal>
             </td>
             <td className='px-5 py-5 border-b border-gray-200 bg-white text-sm'>
                 <span className='relative cursor-pointer inline-block px-3 py-1 font-semibold text-green-900 leading-tight'>
