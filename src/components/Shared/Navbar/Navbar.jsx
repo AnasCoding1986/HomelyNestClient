@@ -4,10 +4,37 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import useAuth from '../../../hooks/useAuth'
 import avatarImg from '../../../assets/images/placeholder.jpg'
+import HostModal from '../../Modal/HostModal'
+import useAxiosSecure from '../../../hooks/useAxiosSecure'
+import toast from 'react-hot-toast'
 
 const Navbar = () => {
+  const axiosSecure = useAxiosSecure();
   const { user, logOut } = useAuth()
   const [isOpen, setIsOpen] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const closeModal = () => {
+    setIsModalOpen(false)
+  }
+
+  const handleModal = async() => {
+    console.log("I want become a host");
+    try {
+      const cUser = {
+        email: user?.email,
+        role: "Guest",
+        status: "requested"
+      }
+      const {data} = await axiosSecure.put("/user", cUser);
+      toast.success("Host request forwarded")
+      return data
+    } catch (error) {
+      console.log(error);
+      toast.error("Host request not forwarded")
+    } finally{
+      closeModal()
+    }  
+  }
 
   return (
     <div className='fixed w-full bg-white z-10 shadow-sm'>
@@ -29,16 +56,17 @@ const Navbar = () => {
               <div className='flex flex-row items-center gap-3'>
                 {/* Become A Host btn */}
                 <div className='hidden md:block'>
-                  {!user && (
+                  {/* {!user && ( */}
                     <button
-                      disabled={!user}
+                      // disabled={!user}
+                      onClick={()=>setIsModalOpen(true)}
                       className='disabled:cursor-not-allowed cursor-pointer hover:bg-neutral-100 py-3 px-4 text-sm font-semibold rounded-full  transition'
                     >
                       Host your home
                     </button>
-                  )}
                 </div>
                 {/* Dropdown btn */}
+                <HostModal closeModal={closeModal} isOpen={isModalOpen} handleModal={handleModal}></HostModal>
                 <div
                   onClick={() => setIsOpen(!isOpen)}
                   className='p-4 md:py-1 md:px-2 border-[1px] border-neutral-200 flex flex-row items-center gap-3 rounded-full cursor-pointer hover:shadow-md transition'
