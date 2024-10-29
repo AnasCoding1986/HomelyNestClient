@@ -65,6 +65,12 @@ const AuthProvider = ({ children }) => {
     return data
   }
 
+  // SaveUser
+  const saveUser = async (user) => {
+    const {data} = await axios.put("/user");
+    return data
+  }
+
   // onAuthStateChange
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, currentUser => {
