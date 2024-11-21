@@ -26,7 +26,9 @@ const Navbar = () => {
         status: "requested"
       }
       const {data} = await axiosSecure.put("/user", cUser);
-      toast.success("Host request forwarded")
+      toast.success("Host request forwarded");
+      console.log("Conceptual is just awesome");
+      
       return data
     } catch (error) {
       console.log(error);
